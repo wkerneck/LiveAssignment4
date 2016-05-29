@@ -1,0 +1,168 @@
+---
+title: "Codebook"
+author: "Bill Kerneckel, Kyle Killion, Eyal Greenberg"
+date: "May 28, 2016"
+output: html_document
+---
+
+## Codebook for 2011 Brooklyn real estate data
+
+### Feature Selection (from 2011_brooklyn.xls)
+The data comes from the offical website of the City of New York located at <a href="http://www1.nyc.gov/">www.1.nyc.gov</a>. You can download the orginal data set at <a href="http:http://www1.nyc.gov/assets/finance/downloads/pdf/rolling_sales/annualized-sales/2011/2011_brooklyn.xls">[XLS] Brooklyn Data</a>. The data is a collection of building sales  based on sales date. The data elements in the .xls file are as follows:
+<br>
+<br>
+BOROUGH
+
+NEIGHBORHOOD
+
+BUILDING CLASS CATEGORY
+
+TAX CLASS AT PRESENT
+
+BLOCK
+
+LOT
+
+EASE-MENT
+
+BUILDING CLASS AT PRESENT
+
+ADDRESS
+
+APARTMENT NUMBER
+
+ZIP CODE
+
+RESIDENTIAL UNITS
+
+COMMERCIAL UNITS
+
+TOTAL UNITS
+
+LAND SQUARE FEET
+
+GROSS SQUARE FEET
+
+YEAR BUILT
+
+TAX CLASS AT TIME OF SALE
+
+BUILDING CLASS AT TIME OF SALE
+
+SALE PRICE
+
+SALE DATE
+<br>
+<br>
+
+#### Follow the steps below to tidy the data
+The steps below will load the orginal data set, remove the header data form the file, clean/format the data and remove zero sale price data. 
+<br>
+<br>
+
+#### Step 1 - Load the data
+`````````````
+require(gdata)
+
+require(plyr)
+
+setwd("/Users/*Username*/documents")
+
+bk <- read.xls("2011_brooklyn.xls",pattern="BOROUGH")
+`````````````
+<br>
+
+#### Step 2 - Perform some basic analysis on the data
+`````````````
+head(bk)
+
+summary(bk)
+
+str(bk)
+`````````````
+<br>
+
+#### Step 3 - Clean and format the data with regular expressions. In this step we will transform the data by changing numeric values to a factor, changing all variables to lower case, remove leading digits, and change formatting of dates.
+`````````````
+Change Sales price from numeric to a factor
+
+bk$SALE.PRICE.N <- as.numeric(gsub("[^[:digit:]]","", bk$SALE.PRICE))
+count(is.na(bk$SALE.PRICE.N))
+
+
+Transform all variables to lower case
+
+names(bk) <- tolower(names(bk)) 
+
+
+Remove leading digits
+
+bk$gross.sqft <- as.numeric(gsub("[^[:digit:]]","", bk$gross.square.feet))
+bk$land.sqft <- as.numeric(gsub("[^[:digit:]]","", bk$land.square.feet))
+
+
+Change sale.date to a date format in R
+
+bk$sale.date <- as.Date(bk$sale.date)
+bk$year.built <- as.numeric(as.character(bk$year.built))
+`````````````
+<br>
+
+#### Step 4 - Analysis the sales and square footage data. We need to make sure sales price is correct.
+`````````````
+attach(bk)
+hist(sale.price.n) # Something weird here
+hist(sale.price.n[sale.price.n>0])
+hist(gross.sqft[sale.price.n==0])
+detach(bk)
+`````````````
+<br>
+
+#### Step 5 - From the analysis above we need to only keep the actual sales data
+`````````````
+bk.sale <- bk[bk$sale.price.n!=0,]
+plot(bk.sale$gross.sqft,bk.sale$sale.price.n)
+plot(log10(bk.sale$gross.sqft),log10(bk.sale$sale.price.n))
+`````````````
+<br>
+
+#### Step 6 - Lets compare the data for 1,2,3 family size homes
+`````````````
+dim(bk.homes)
+plot(log10(bk.homes$gross.sqft),log10(bk.homes$sale.price.n))
+summary(bk.homes[which(bk.homes$sale.price.n<100000),])
+`````````````
+<br>
+
+#### Step 7 - Finally lets remove any outliers that weren't actual sales
+`````````````
+bk.homes$outliers <- (log10(bk.homes$sale.price.n) <=5) + 0
+bk.homes <- bk.homes[which(bk.homes$outliers==0),]
+plot(log(bk.homes$gross.sqft),log(bk.homes$sale.price.n))
+`````````````
+<br>
+
+#### Table of variable names
+``````````````
+BOROUGH                       : int  
+NEIGHBORHOOD                  : Factor
+BUILDING.CLASS.CATEGORY       : Factor                         
+TAX.CLASS.AT.PRESENT          : Factor 
+BLOCK                         : int 
+LOT                           : int 
+EASE.MENT                     : logi  
+BUILDING.CLASS.AT.PRESENT     : Factor 
+ADDRESS                       : Factor 
+APARTMENT.NUMBER              : Factor 
+ZIP.CODE                      : int 
+RESIDENTIAL.UNITS             : int 
+COMMERCIAL.UNITS              : int  
+TOTAL.UNITS                   : int 
+LAND.SQUARE.FEET              : Factor 
+GROSS.SQUARE.FEET             : Factor
+YEAR.BUILT                    : int  
+TAX.CLASS.AT.TIME.OF.SALE     : int  
+BUILDING.CLASS.AT.TIME.OF.SALE: Factor 
+SALE.PRICE                    : Factor 
+SALE.DATE                     : Factor 
+````````````````

@@ -1,5 +1,7 @@
 # LiveAssignment4
 
+#### By Kyle Killion, Bill Kerneckel, Eyal Greenberg
+
 *This is our Live Session group project #4*
 
 ___The Purpose___

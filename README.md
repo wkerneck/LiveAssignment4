@@ -1,4 +1,8 @@
 # LiveAssignment4
+Group Members:
+Eyal Greenberg
+Kyle Killion
+Bill Kerneckel
 
 *This is our Live Session group project #4*
 

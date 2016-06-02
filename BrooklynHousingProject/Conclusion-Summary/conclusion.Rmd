@@ -1,0 +1,11 @@
+---
+title: "Conclusion"
+author: "Bill Kerneckel, Kyle Killion, Eyal Greenberg"
+date: "May 28, 2016"
+output: 
+  html_document:
+    keep_md: yes
+---
+
+## Conclusion and summary for 2011 Brooklyn real estate data
+

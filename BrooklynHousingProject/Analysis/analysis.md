@@ -19,7 +19,7 @@ detach(bk)
 `````````````
 
 
-```r
+```{r}
 knitr::opts_chunk$set(cache=TRUE)
 
 attach(bk)
@@ -28,13 +28,13 @@ hist(sale.price.n)
 
 ![](analysis_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
 
-```r
+```{r}
 hist(sale.price.n[sale.price.n>0])
 ```
 
 ![](analysis_files/figure-html/unnamed-chunk-1-2.png)<!-- -->
 
-```r
+```{r}
 hist(gross.sqft[sale.price.n==0])
 ```
 

@@ -32,7 +32,7 @@ hist(sale.price.n)
 hist(sale.price.n[sale.price.n>0])
 ```
 
-![](analysis_files/figure-html/unnamed-chunk-1-2.png)<!-- -->
+![](/analysis_files/figure-html/unnamed-chunk-1-2.png)<!-- -->
 
 ```{r}
 hist(gross.sqft[sale.price.n==0])
